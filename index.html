@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistica Toolkit - All-in-One Dashboard</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+    <!-- Efek Cahaya Latar Kosmik -->
+    <div class="fixed -top-40 -left-40 w-96 h-96 bg-blue-600 rounded-full blur-[160px] opacity-15 pointer-events-none"></div>
+    <div class="fixed -bottom-40 -right-40 w-96 h-96 bg-indigo-600 rounded-full blur-[160px] opacity-15 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8 relative z-10">
+        
+        <!-- Header Dashboard Utama -->
+        <header class="mb-10 flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-800 pb-8 gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-500 to-indigo-400">
+                    SUPER STATISTICA TOOLKIT
+                </h1>
+                <p class="text-xs text-slate-500 mt-1.5 uppercase tracking-wider font-semibold">Integrasi Asisten Komputasi Statistika & Aljabar Linier</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-500">Mode:</span>
+                <div class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-2xl text-xs font-semibold text-emerald-300 shadow-inner flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    Single Page Engine Active
+                </div>
+            </div>
+        </header>
+
+        <!-- SISTEM NAVIGASI TAB MODEREN -->
+        <nav class="bg-slate-900 border border-slate-800 rounded-3xl p-2 mb-10 flex flex-col sm:flex-row gap-2 shadow-2xl">
+            <button onclick="openTab(event, 'statistikaTab')" id="defaultTab" class="tab-link flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-2xl text-sm font-bold text-slate-300 hover:text-white transition-all duration-300 cursor-pointer active:scale-95">
+                <span class="text-base">📊</span> Statistika Deskriptif & Probabilitas
+            </button>
+            <button onclick="openTab(event, 'aljabarTab')" class="tab-link flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-2xl text-sm font-bold text-slate-300 hover:text-white transition-all duration-300 cursor-pointer active:scale-95">
+                <span class="text-base">📐</span> Aljabar Linier & Operasi Matriks
+            </button>
+        </nav>
+
+        <!-- ======================================================== -->
+        <!-- TAB 1: KONTEN STATISTIKA (Single-Page-App Mode) -->
+        <!-- ======================================================== -->
+        <div id="statistikaTab" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- BLOCK 1.1: STATISTIKA DESKRIPTIF -->
+                <div class="lg:col-span-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl backdrop-blur-md flex flex-col gap-4">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="p-3 bg-blue-500/10 rounded-2xl text-blue-400 font-bold text-lg">📊</span>
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Statistika Deskriptif</h2>
+                            <p class="text-[10px] text-slate-500 tracking-wider">MEAN, MEDIAN, VARIANCE, STD DEV</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Input Data Tunggal (Contoh: 10, 22, 15, 30)</label>
+                        <input type="text" id="dataInput" placeholder="Masukkan angka dipisahkan koma..." class="w-full bg-black border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 text-white placeholder-slate-600">
+                    </div>
+                    <button id="calcDescBtn" class="w-full bg-blue-600 hover:bg-blue-500 font-semibold py-3 rounded-xl text-sm transition-all active:scale-[0.98] cursor-pointer mb-2">Hitung Parameter</button>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="bg-black p-3 rounded-xl border border-slate-800"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Mean</p><p id="resMean" class="font-mono text-base text-blue-400 font-bold mt-1">-</p></div>
+                        <div class="bg-black p-3 rounded-xl border border-slate-800"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Median</p><p id="resMedian" class="font-mono text-base text-teal-400 font-bold mt-1">-</p></div>
+                        <div class="bg-black p-3 rounded-xl border border-slate-800"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Ragam ($s^2$)</p><p id="resVariance" class="font-mono text-base text-indigo-400 font-bold mt-1">-</p></div>
+                        <div class="bg-black p-3 rounded-xl border border-slate-800"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Std Dev ($s$)</p><p id="resStdDev" class="font-mono text-base text-purple-400 font-bold mt-1">-</p></div>
+                    </div>
+                </div>
+
+                <!-- BLOCK 1.2: DISTRIBUSI NORMAL Z-SCORE -->
+                <div class="lg:col-span-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl backdrop-blur-md flex flex-col gap-4">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="p-3 bg-indigo-500/10 rounded-2xl text-indigo-400 font-bold text-lg">📈</span>
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Distribusi Normal ($Z$-Score)</h2>
+                            <p class="text-[10px] text-slate-500 tracking-wider">PELUANG POSISI RELATIF DATA</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 mb-1">
+                        <div><label class="block text-[9px] font-semibold text-slate-400 uppercase mb-1.5">Nilai $X$</label><input type="number" id="inputX" placeholder="85" class="w-full bg-black border border-slate-700 rounded-lg p-2.5 text-xs text-white"></div>
+                        <div><label class="block text-[9px] font-semibold text-slate-400 uppercase mb-1.5">Mean ($\mu$)</label><input type="number" id="inputMu" placeholder="70" class="w-full bg-black border border-slate-700 rounded-lg p-2.5 text-xs text-white"></div>
+                        <div><label class="block text-[9px] font-semibold text-slate-400 uppercase mb-1.5">Std Dev ($\sigma$)</label><input type="number" id="inputSigma" placeholder="10" class="w-full bg-black border border-slate-700 rounded-lg p-2.5 text-xs text-white"></div>
+                    </div>
+                    <button id="calcZBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold py-3 rounded-xl text-sm cursor-pointer active:scale-[0.98]">Hitung Skor Z</button>
+                    <div class="bg-black border border-slate-800 rounded-2xl p-4 text-center mt-auto flex-grow flex flex-col justify-center min-h-[110px]">
+                        <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Hasil Nilai Z</p>
+                        <div id="resZScore" class="text-3xl font-black text-indigo-400 mt-1.5">-</div>
+                    </div>
+                </div>
+
+                <!-- BLOCK 1.3: KORELASI & REGRESI, BINOMIAL, POISSON (V2.0) -->
+                <div class="lg:col-span-1 grid grid-cols-1 gap-6">
+                    <!-- Korelasi -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl backdrop-blur-md">
+                        <div class="flex items-center gap-3 mb-3"><span class="p-2 bg-emerald-500/10 rounded-xl text-emerald-400 text-base">⛓️</span><h2 class="text-sm font-bold text-white">Korelasi & Regresi ($r$, $R^2$)</h2></div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div><input type="text" id="inputArrayX" placeholder="Data X (1,2,3)" class="w-full bg-black border border-slate-700 rounded-lg p-2 text-[10px] text-white"></div>
+                            <div><input type="text" id="inputArrayY" placeholder="Data Y (2,4,5)" class="w-full bg-black border border-slate-700 rounded-lg p-2 text-[10px] text-white"></div>
+                        </div>
+                        <button id="calcKorelasiBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 font-semibold py-2 rounded-lg text-xs cursor-pointer mb-3">Analisis Korelasi</button>
+                        <div class="grid grid-cols-2 gap-2 text-[11px]">
+                            <div class="bg-black p-2 rounded-lg border border-slate-800 text-center"><p id="resPearson" class="font-mono text-sm text-emerald-400 font-bold mt-0.5">-</p><p class="text-[8px] text-slate-500 font-bold">Pearson $r$</p></div>
+                            <div class="bg-black p-2 rounded-lg border border-slate-800 text-center"><p id="resRSquared" class="font-mono text-sm text-amber-400 font-bold mt-0.5">-</p><p class="text-[8px] text-slate-500 font-bold">Determinasi $R^2$</p></div>
+                        </div>
+                    </div>
+                    <!-- Binomial & Poisson -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 text-center">
+                            <div class="p-1.5 bg-pink-500/10 rounded-lg text-pink-400 text-xs font-bold inline-block mb-2">🎲 Binomial</div>
+                            <input type="number" id="binomX" placeholder="Sukses (x)" class="w-full bg-black border border-slate-700 rounded-lg p-1.5 text-[9px] text-white mb-2 text-center">
+                            <input type="number" id="binomN" placeholder="Trial (n)" class="w-full bg-black border border-slate-700 rounded-lg p-1.5 text-[9px] text-white mb-2 text-center">
+                            <input type="number" id="binomP" placeholder="Peluang (p)" class="w-full bg-black border border-slate-700 rounded-lg p-1.5 text-[9px] text-white mb-2 text-center">
+                            <button id="calcBinomBtn" class="w-full bg-pink-600 py-1.5 rounded-lg text-[9px] mb-2 cursor-pointer">Hitung P</button>
+                            <div id="resBinom" class="text-sm font-bold text-pink-400 font-mono mt-1">-</div>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 text-center">
+                            <div class="p-1.5 bg-cyan-500/10 rounded-lg text-cyan-400 text-xs font-bold inline-block mb-2">🔔 Poisson</div>
+                            <input type="number" id="poissonX" placeholder="Kejadian (x)" class="w-full bg-black border border-slate-700 rounded-lg p-1.5 text-[9px] text-white mb-2 text-center">
+                            <input type="number" id="poissonLam" placeholder="Lambda (λ)" class="w-full bg-black border border-slate-700 rounded-lg p-1.5 text-[9px] text-white mb-4 text-center">
+                            <button id="calcPoissonBtn" class="w-full bg-cyan-600 py-1.5 rounded-lg text-[9px] mb-2 cursor-pointer">Hitung P</button>
+                            <div id="resPoisson" class="text-sm font-bold text-cyan-400 font-mono mt-1">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- TAB 2: KONTEN ALJABAR LINIER (Matrix Engine) -->
+        <!-- ======================================================== -->
+        <div id="aljabarTab" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- SEKSI 2.1: DETERMINAN & INVERS (2x2) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-7 shadow-xl backdrop-blur-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="p-3 bg-orange-500/10 rounded-2xl text-orange-400 font-bold text-lg">🧮</span>
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Matriks $2 \times 2$</h2>
+                                <p class="text-[10px] text-slate-500 tracking-wider">DETERMINAN & INVERS</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-6">Masukkan elemen matriks $A$ untuk dicari $|A|$ dan $A^{-1}$.</p>
+                        <div class="grid grid-cols-2 gap-3 max-w-[180px] mx-auto mb-8">
+                            <input type="number" id="m2_a" placeholder="a" class="bg-black border border-slate-700 rounded-xl p-3.5 text-center text-sm focus:border-orange-400 text-white font-mono">
+                            <input type="number" id="m2_b" placeholder="b" class="bg-black border border-slate-700 rounded-xl p-3.5 text-center text-sm focus:border-orange-400 text-white font-mono">
+                            <input type="number" id="m2_c" placeholder="c" class="bg-black border border-slate-700 rounded-xl p-3.5 text-center text-sm focus:border-orange-400 text-white font-mono">
+                            <input type="number" id="m2_d" placeholder="d" class="bg-black border border-slate-700 rounded-xl p-3.5 text-center text-sm focus:border-orange-400 text-white font-mono">
+                        </div>
+                        <button id="calcM2Btn" class="w-full bg-orange-600 hover:bg-orange-500 font-semibold py-3 rounded-xl text-sm active:scale-[0.98] cursor-pointer mb-6">Proses Matriks 2x2</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-xs mt-auto">
+                        <div class="bg-black border border-slate-800 rounded-2xl p-4 text-center"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Determinan ($|A|$)</p><p id="resDet2" class="text-2xl font-black text-orange-400 mt-1.5 font-mono">-</p></div>
+                        <div class="bg-black border border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[96px]"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-2.5">Invers ($A^{-1}$)</p><div id="resInv2" class="grid grid-cols-2 gap-2 text-xs font-mono font-bold text-amber-400"><span>-</span><span>-</span><span>-</span><span>-</span></div></div>
+                    </div>
+                </div>
+
+                <!-- SEKSI 2.2: DETERMINAN SARRUS (3x3) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-7 shadow-xl backdrop-blur-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="p-3 bg-yellow-500/10 rounded-2xl text-yellow-400 font-bold text-lg">🔲</span>
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Matriks $3 \times 3$</h2>
+                                <p class="text-[10px] text-slate-500 tracking-wider">DETERMINAN SARRUS</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-6">Hitung determinan matriks $3 \times 3$ menggunakan metode Sarrus.</p>
+                        <div class="grid grid-cols-3 gap-2.5 max-w-[260px] mx-auto mb-7">
+                            <input type="number" id="m3_11" placeholder="a11" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_12" placeholder="a12" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_13" placeholder="a13" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_21" placeholder="a21" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_22" placeholder="a22" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_23" placeholder="a23" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_31" placeholder="a31" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_32" placeholder="a32" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                            <input type="number" id="m3_33" placeholder="a33" class="bg-black border border-slate-700 rounded-xl p-2.5 text-center text-xs focus:border-yellow-400 font-mono text-white">
+                        </div>
+                        <button id="calcM3Btn" class="w-full bg-yellow-600 hover:bg-yellow-500 font-semibold py-3 rounded-xl text-sm cursor-pointer mb-6">Hitung Determinan 3x3</button>
+                    </div>
+                    <div class="bg-black border border-slate-800 rounded-2xl p-6 text-center mt-auto"><p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Hasil Determinan Matriks 3x3</p><p id="resDet3" class="text-3xl font-black text-yellow-400 mt-1.5 font-mono">-</p></div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-xs text-slate-600 tracking-wide">
+            Statistica toolkit Engine v2.0 Beta &bull; Designed by Rasya & AI
+        </footer>
+    </div>
+
+    <!-- JAVASCRIPT: LOGIKA TAB & KOMPUTASI MATEMATIKA -->
+    <script>
+        // --- 1. LOGIKA SISTEM TAB SINGLE PAGE ---
+        function openTab(evt, tabName) {
+            // Sembunyikan semua konten tab
+            const tabContent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContent.length; i++) tabContent[i].style.display = "none";
+
+            // Hapus kelas 'active' dari semua tombol tab
+            const tabLinks = document.getElementsByClassName("tab-link");
+            for (let i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].className = tabLinks[i].className.replace(" bg-gradient-to-tr from-cyan-600/60 to-blue-700/60 text-white shadow-lg", " text-slate-300");
+            }
+
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).className += " active";
+            
+            // Tambahkan kelas gaya aktif ke tombol yang diklik
+            evt.currentTarget.className = evt.currentTarget.className.replace(" text-slate-300", " bg-gradient-to-tr from-cyan-600/60 to-blue-700/60 text-white shadow-lg");
+        }
+
+        // Set Tab default saat halaman dibuka
+        document.getElementById("defaultTab").click();
+
+        // --- 2. LOGIKA UTAMA: KOMPUTASI STATISTIKA (V2.0) ---
+        // Rumus Dasar Probabilitas
+        const fkt = num => num < 0 ? 0 : (num === 0 ? 1 : num * fkt(num - 1));
+        const comb = (n, r) => faktorial(n) / (faktorial(r) * faktorial(n - r));
+        const faktorial = num => (num === 0 || num === 1) ? 1 : num * faktorial(num - 1);
+        function kombinasi(n, r) { if (r > n) return 0; return faktorial(n) / (faktorial(r) * faktorial(n - r)); }
+
+        // 2.1 Statistika Deskriptif
+        document.getElementById('calcDescBtn').addEventListener('click', () => {
+            const arr = document.getElementById('dataInput').value.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+            if (arr.length === 0) return alert("Mohon masukkan data!");
+            
+            const n = arr.length;
+            const mean = arr.reduce((a, b) => a + b, 0) / n;
+            const sorted = [...arr].sort((a, b) => a - b);
+            const median = n % 2 === 0 ? (sorted[n/2 - 1] + sorted[n/2]) / 2 : sorted[Math.floor(n/2)];
+            let variance = n > 1 ? arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1) : 0;
+            
+            document.getElementById('resMean').textContent = mean.toFixed(4);
+            document.getElementById('resMedian').textContent = median.toFixed(4);
+            document.getElementById('resVariance').textContent = variance.toFixed(4);
+            document.getElementById('resStdDev').textContent = Math.sqrt(variance).toFixed(4);
+        });
+
+        // 2.2 Z-Score
+        document.getElementById('calcZBtn').addEventListener('click', () => {
+            const x = parseFloat(document.getElementById('inputX').value), mu = parseFloat(document.getElementById('inputMu').value), sigma = parseFloat(document.getElementById('inputSigma').value);
+            if (isNaN(x) || isNaN(mu) || isNaN(sigma) || sigma <= 0) return alert("Input Z-Score tidak valid!");
+            document.getElementById('resZScore').textContent = ((x - mu) / sigma).toFixed(4);
+        });
+
+        // 2.3 Korelasi Pearson (V2.0)
+        document.getElementById('calcKorelasiBtn').addEventListener('click', () => {
+            const X = document.getElementById('inputArrayX').value.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+            const Y = document.getElementById('inputArrayY').value.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+            if (X.length !== Y.length || X.length === 0) return alert("Panjang Array X & Y harus sama!");
+
+            const n = X.length, sumX = X.reduce((a,b)=>a+b,0), sumY = Y.reduce((a,b)=>a+b,0), sumXY = X.reduce((acc,curr,i)=> acc + (curr * Y[i]), 0), sumX2 = X.reduce((a,b)=>a+(b*b),0), sumY2 = Y.reduce((a,b)=>a+(b*b),0);
+            const num = (n * sumXY) - (sumX * sumY);
+            const den = Math.sqrt(((n * sumX2) - (sumX * sumX)) * ((n * sumY2) - (sumY * sumY)));
+            const r = den === 0 ? 0 : num / den;
+            document.getElementById('resPearson').textContent = r.toFixed(4);
+            document.getElementById('resRSquared').textContent = Math.pow(r, 2).toFixed(4);
+        });
+
+        // 2.4 Binomial & Poisson (V2.0)
+        document.getElementById('calcBinomBtn').addEventListener('click', () => {
+            const x = parseInt(document.getElementById('binomX').value), n = parseInt(document.getElementById('binomN').value), p = parseFloat(document.getElementById('binomP').value);
+            if(isNaN(x) || isNaN(n) || isNaN(p) || p < 0 || p > 1 || x > n) return alert("Cek kembali input Binomial!");
+            const prob = kombinasi(n, x) * Math.pow(p, x) * Math.pow(1 - p, n - x);
+            document.getElementById('resBinom').textContent = prob.toFixed(5);
+        });
+        document.getElementById('calcPoissonBtn').addEventListener('click', () => {
+            const x = parseInt(document.getElementById('poissonX').value), lam = parseFloat(document.getElementById('poissonLam').value);
+            if(isNaN(x) || isNaN(lam) || lam <= 0 || x < 0) return alert("Cek kembali input Poisson!");
+            const prob = (Math.exp(-lam) * Math.pow(lam, x)) / faktorial(x);
+            document.getElementById('resPoisson').textContent = prob.toFixed(5);
+        });
+
+        // --- 3. LOGIKA UTAMA: KOMPUTASI ALJABAR LINIER (Matrix Engine) ---
+        // 3.1 Matriks 2x2
+        document.getElementById('calcM2Btn').addEventListener('click', () => {
+            const a = parseFloat(document.getElementById('m2_a').value), b = parseFloat(document.getElementById('m2_b').value), c = parseFloat(document.getElementById('m2_c').value), d = parseFloat(document.getElementById('m2_d').value);
+            if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) return alert("Isi elemen 2x2!");
+            const det = (a * d) - (b * c);
+            document.getElementById('resDet2').textContent = det;
+            const invContainer = document.getElementById('resInv2');
+            if (det === 0) invContainer.innerHTML = `<span class="col-span-2 text-red-400 text-[10px] text-center font-bold">Singular!</span>`;
+            else invContainer.innerHTML = `<span class="bg-slate-900 border border-slate-800 p-2 rounded text-center">${(d/det).toFixed(3)}</span><span class="bg-slate-900 border border-slate-800 p-2 rounded text-center">${(-b/det).toFixed(3)}</span><span class="bg-slate-900 border border-slate-800 p-2 rounded text-center">${(-c/det).toFixed(3)}</span><span class="bg-slate-900 border border-slate-800 p-2 rounded text-center">${(a/det).toFixed(3)}</span>`;
+        });
+
+        // 3.2 Matriks 3x3 Sarrus
+        document.getElementById('calcM3Btn').addEventListener('click', () => {
+            const elements = ['m3_11','m3_12','m3_13','m3_21','m3_22','m3_23','m3_31','m3_32','m3_33'].map(id => parseFloat(document.getElementById(id).value));
+            if (elements.some(isNaN)) return alert("Lengkapi elemen 3x3!");
+            const [a11,a12,a13,a21,a22,a23,a31,a32,a33] = elements;
+            const det3 = (a11*a22*a33 + a12*a23*a31 + a13*a21*a32) - (a13*a22*a31 + a11*a23*a32 + a12*a21*a33);
+            document.getElementById('resDet3').textContent = det3;
+        });
+    </script>
+</body>
+</html>
