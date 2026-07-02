@@ -400,10 +400,11 @@
             } else if (operasi === 'kurang') {
                 h11 = a11 - b11; h12 = a12 - b12; h21 = a21 - b21; h22 = a22 - b22;
             } else if (operasi === 'kali') {
+                // Rumus perkalian matriks 2x2:
+                // [a11 a12]   [b11 b12]   [a11*b11 + a12*b21   a11*b12 + a12*b22]
+                // [a21 a22] x [b21 b22] = [a21*b11 + a22*b21   a21*b12 + a22*b22]
+                
                 h11 = (a11 * b11) + (a12 * b21);
-                h12 = (a11 * b12) + (a12 * b22);
-                h21 = (a21 * b11) + (a22 * b22); // Koreksi baris 2 kolom 1
-                h21 = (a21 * b11) + (a22 * b21);
                 h12 = (a11 * b12) + (a12 * b22);
                 h21 = (a21 * b11) + (a22 * b21);
                 h22 = (a21 * b12) + (a22 * b22);
